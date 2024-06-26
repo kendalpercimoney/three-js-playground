@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>bouncing ball</title>
+		<style>
+			body { margin: 0; }
+		</style>
+	</head>
+	<body>
+		<script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r154/build/three.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/controls/OrbitControls.js"></script>
+		<script>
+			//setup code
+      const scene = new THREE.Scene();
+      width = 400;
+      height = 400;
+
+      const camera = new THREE.OrthographicCamera( width / - 2, width / 2, height / 2, height / - 2, 1, 1000 );
+
+      const renderer = new THREE.WebGLRenderer();
+      //renderer.setClearColor(0x333F47, 1); //background colour
+      renderer.setSize( window.innerWidth, window.innerHeight );
+      document.body.appendChild( renderer.domElement );
+
+      //background object (cube)
+      const boxGeometry = new THREE.BoxGeometry( 1600, 1200, 2);
+      const boxMaterial = new THREE.MeshPhongMaterial( { color: 0xffffff } );
+      const mesh = new THREE.Mesh( boxGeometry, boxMaterial );
+      scene.add( mesh );
+      mesh.position.z = -500 //set backwards for use as background
+
+
+      //create sphere
+      const geometry = new THREE.SphereGeometry(30, 200, 50);
+      const material = new THREE.MeshPhongMaterial( { color: 0xFF0000 } );
+      const sphere = new THREE.Mesh( geometry, material );
+      scene.add( sphere );
+
+
+      
+
+      //create light
+      var light = new THREE.PointLight(0xffffaa);
+      light.position.set(-1000,800,400);
+      scene.add(light);
+
+    
+      //pull camera back
+      camera.position.z = 200;
+
+      // Add OrbitControls so that we can pan around with the mouse.
+      
+      var cameraControls = new THREE.OrbitControls(camera, renderer.domElement);
+      
+      //define starting speed
+      ballSpeed = 0.7;
+
+      //starting speed
+      yUpdate = ballSpeed;
+      xUpdate = ballSpeed;
+
+      //sphere starting position
+      sphere.position.y = 115;
+      sphere.position.x += -150;
+
+
+      function animate() {
+        requestAnimationFrame( animate );
+        renderer.render( scene, camera );
+        
+        //update sphere position on screen
+        sphere.position.y += yUpdate;
+        sphere.position.x += xUpdate;
+
+        //console.log(sphere.position.x);
+
+
+        //bounce code
+        if ( sphere.position.y > 115 ){
+        //change sphere direction
+        yUpdate = -ballSpeed;
+        //change sphere colour
+        sphere.material.color.setHex( 0xffffff );
+        }
+        if ( sphere.position.y < -115 ){
+        yUpdate = ballSpeed;
+        sphere.material.color.setHex( 0xff66ff )
+        }
+        if ( sphere.position.x > 170 ){
+        xUpdate = -ballSpeed;
+        sphere.material.color.setHex( 0x99ffff )
+        }
+        if ( sphere.position.x < -170 ){
+        xUpdate = ballSpeed;
+        sphere.material.color.setHex( 0x000000 )
+        }
+
+      }
+      animate();
+		</script>
+	</body>
+</html>
